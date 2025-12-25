@@ -5,7 +5,7 @@ Lightweight Discord webhook notifier.
 ## Install
 
 ```bash
-pnpm add @a1/discord-notifier
+pnpm add @a1-dev/discord-notifier
 ```
 
 Or directly from GitHub:
@@ -13,7 +13,7 @@ Or directly from GitHub:
 ```json
 {
   "dependencies": {
-    "@a1/discord-notifier": "github:antofa/discord-notifier#main"
+    "@a1-dev/discord-notifier": "github:antofa/discord-notifier#main"
   }
 }
 ```
@@ -21,7 +21,7 @@ Or directly from GitHub:
 ## Usage
 
 ```ts
-import { DiscordClient } from "@a1/discord-notifier";
+import { DiscordClient } from "@a1-dev/discord-notifier";
 
 const client = new DiscordClient({
   webhookUrl: process.env.DISCORD_WEBHOOK_URL,

@@ -1,5 +1,5 @@
 {
-  "name": "@a1/discord-notifier",
+  "name": "@a1-dev/discord-notifier",
   "version": "0.1.1",
   "description": "Lightweight Discord webhook notifier",
   "type": "module",
