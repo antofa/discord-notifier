@@ -17,7 +17,7 @@ export interface DiscordAlertOptions {
   /**
    * Embed description text.
    */
-  description: string;
+  description?: string;
   /**
    * Optional fields to show in the embed.
    */
