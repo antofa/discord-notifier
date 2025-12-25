@@ -3,19 +3,23 @@
   "version": "0.1.1",
   "description": "Lightweight Discord webhook notifier",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.cjs",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:cjs:rename",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:cjs:rename": "find dist/cjs -name '*.js' -exec sh -c 'mv \"$0\" \"${0%.js}.cjs\"' {} \\; || true",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build"
   },
