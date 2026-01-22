@@ -9,7 +9,9 @@ export interface DiscordClientConfig {
   name?: string;
 }
 
-export interface DiscordAlertOptions {
+export type DiscordNotificationType = "warning" | "alert";
+
+export interface DiscordNotificationOptions {
   /**
    * Embed title.
    */
@@ -23,9 +25,19 @@ export interface DiscordAlertOptions {
    */
   fields?: { name: string; value: string; inline?: boolean }[];
   /**
+   * Notification type:
+   *  "warning" - yellow color
+   *  "alert" - red color
+   */
+  type?: DiscordNotificationType;
+  /**
    * Embed color as a decimal number (default: 0xed4245).
    */
   color?: number;
+  /**
+   * Mention @here in a channel
+   */
+  mention?: boolean;
 }
 
 export class DiscordClient {
@@ -37,21 +49,33 @@ export class DiscordClient {
     this.name = config.name;
   }
 
+  private resolveColor(options: DiscordNotificationOptions): number {
+    switch (options.type) {
+      case "warning":
+        return 0xfee75c;
+      case "alert":
+        return 0xed4245;
+      default:
+        return options.color ?? 0x57f287;
+    }
+  }
+
   /**
    * Send a single embed message to Discord.
    */
-  async notify(options: DiscordAlertOptions): Promise<void> {
+  async notify(options: DiscordNotificationOptions): Promise<void> {
     if (!this.webhookUrl) {
       return;
     }
 
     try {
       const payload = {
+        content: options.type === "alert" || options.mention ? "@here" : "",
         embeds: [
           {
             title: options.title,
             description: options.description,
-            color: options.color ?? 0xed4245,
+            color: this.resolveColor(options),
             fields: options.fields ?? [],
             footer: this.name ? { text: this.name } : undefined,
             timestamp: new Date().toISOString(),
@@ -66,7 +90,9 @@ export class DiscordClient {
       });
 
       if (!response.ok) {
-        console.warn(`Discord notification failed with status ${response.status}`);
+        console.warn(
+          `Discord notification failed with status ${response.status}`,
+        );
       }
     } catch (error) {
       console.warn(`Failed to send Discord notification: ${error}`);
